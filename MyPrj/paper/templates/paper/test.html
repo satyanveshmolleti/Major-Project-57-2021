@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+	{%load static%}
+	<link href="{% static 'paper/pg.css'%}" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="{% static 'paper/bootstrap.css'%}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <meta charset="utf-8">
+	<title>Welcome to SES </title>
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header navbar-left">
+    			<h3 class="textWhite">Smart Examination System</h3>
+			</div>
+            <form action="{%url 'logout'%}" style="align-self: auto;">
+			<div class="navbar-right">
+				<button type="submit" class="btn btn-light" style="box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);">LogOut</button>
+			</div></form>
+
+		</div>
+	</nav>
+    <div class="container-fluid">
+        <script type="text/javascript">
+
+   				function changeFunc(select_set,hidden_field) {
+					var selectBox = document.getElementById(select_set);
+    				document.getElementById(hidden_field).value = selectBox.options[selectBox.selectedIndex].value;
+   				}
+</script>
+        <h3>Test Id : {{test.test_id}}</h3>
+
+        <h3>select question :</h3>
+        <select required id="qno_sel" onclick="changeFunc('qno_sel','qno_text')">
+            {% for question in test.questions %}
+            <option value='{{question}}'>{{question}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <form action="{% url 'goToQuestion' %}" method="post">{% csrf_token %}
+            <input type="text" id="qno_text" name="qno" style="width:90%"/><br/>
+            <br>
+            <button class="btn btn-secondary rounded-pill" type="submit">Go to question</button><br/><br/>
+
+        </form>
+
+
+        <form action="{% url 'saveAns' %}" method="post">{% csrf_token %}
+            <textarea cols="70" rows="5" name="qno">{{qnow}}</textarea>&nbsp;marks:{{marks}}<br/>
+            <textarea cols="70" rows="20" name="ans">{{anow}}</textarea><br/>
+            <button class="btn btn-primary rounded-pill" type="submit">save</button>&nbsp;
+            
+        </form>
+        <br>
+        <form action="{% url 'submitPaper' %}" method="post">{% csrf_token %}
+            <button class="btn btn-primary rounded-pill" type="submit" onclick="alert('once submited the paper is completed and can no longer continue test');">submit paper</button>
+        </form>
+
+    </div>
+</body>
+</html>
